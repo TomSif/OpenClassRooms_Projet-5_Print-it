@@ -120,36 +120,48 @@ header {
 	z-index: -1;
 	object-fit: cover;
 	object-position: center;
+	transition: 0.1s ease-in forwards;
 }
 /* Code CSS en prévision de l'ajout d'un carousel pour la bannière */
+
 /* Gestion des fleches du carrousel */
 #banner .arrow {
 	position: absolute;
 	width: 100%;
     top: 50%;
-    transform: translateY(-50%); /* Centre verticalement */
+    transform: translateY(-50%); 
 }
+
 .arrow button {
     background: none;
     border: none;
     padding: 0;
     cursor: pointer;
     pointer-events: auto; /* Permet aux boutons d'être cliquables */
+    transition: transform 0.2s ease; 
 }
+
+.arrow button:active {
+    transform: scale(0.95); 
+}
+
 #banner .arrow_left,
 #banner .arrow_right {
-    position: absolute; /* Ajout obligatoire */
-    width: 40px; /* Ajuste la taille selon tes besoins */
+    position: absolute; 
+    width: 40px; 
     height: auto;
-    cursor: pointer; /* Permet d'avoir un effet interactif */
+    cursor: pointer;
 	
 }
+
 #banner .arrow_left {
 	left: 10px;
 }
+
 #banner .arrow_right {
 	right: 10px;
 }
+
 /* Gestion des points du carrousel */
 .dots {
 	position: absolute;
@@ -163,12 +175,19 @@ header {
 	background-color: #ffffff00;
 	border: 3px solid #fff;
 	border-radius: 100%;
-	box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);;
+	box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+	transition: transform 0.2s ease; 
 }
+
+.dot:active {
+    transform: scale(0.95); 
+}
+
 .dot.selected {
 	background-color: #fff;
 }
 /* Fin du code CSS pour le carousel */
+
 #banner p {
 	font-family: 'Roboto Slab', sans-serif;
 	font-weight: 900;
