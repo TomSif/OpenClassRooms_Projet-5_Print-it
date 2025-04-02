@@ -1,81 +1,106 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const config = {
-        slides: [
-            { image: "slide1.jpg", tagLine: "Impressions tous formats <span>en boutique et en ligne</span>" },
-            { image: "slide2.jpg", tagLine: "Tirages haute définition grand format <span>pour vos bureaux et events</span>" },
-            { image: "slide3.jpg", tagLine: "Grand choix de couleurs <span>de CMJN aux pantones</span>" },
-            { image: "slide4.png", tagLine: "Autocollants <span>avec découpe laser sur mesure</span>" }
-        ],
-        imagePath: "./assets/images/slideshow/",
-        currentIndex: 0
-    };
-
-    const uiElements = {
-        banner: document.getElementById("banner"),
-        bannerImg: document.querySelector(".banner-img"),
-        dots: document.querySelectorAll(".dot"),
-        leftArrow: document.querySelector(".arrow_left"),
-        rightArrow: document.querySelector(".arrow_right"),
-        tagline: null,
-        hasDots: false
-    };
-
-    function initUIElementsAndListeners() {
-        // Créer et ajouter l'élément de légende
-        const tagline = document.createElement("p");
-        uiElements.banner.appendChild(tagline);
-        uiElements.tagline = tagline;
-
-        // Vérifier la présence des points et initialiser les écouteurs d'événements
-        uiElements.hasDots = uiElements.dots.length > 0;
-
+document.addEventListener("DOMContentLoaded", () => {
+    // Configuration du carrousel
+    const slides = [
+        { image: "slide1.jpg", tagLine: "Impressions tous formats <span>en boutique et en ligne</span>" },
+        { image: "slide2.jpg", tagLine: "Tirages haute définition grand format <span>pour vos bureaux et events</span>" },
+        { image: "slide3.jpg", tagLine: "Grand choix de couleurs <span>de CMJN aux pantones</span>" },
+        { image: "slide4.png", tagLine: "Autocollants <span>avec découpe laser sur mesure</span>" }
+    ];
+    
+    const imagePath = "./assets/images/slideshow/";
+    let currentIndex = 0;
+    let bannerImg, tagline, dotsContainer;
+    
+    // Initialisation du carrousel
+    function init() {
         try {
-            if (uiElements.leftArrow) {
-                uiElements.leftArrow.addEventListener("click", () => {
-                    console.log("Clic sur la flèche gauche");
-                    updateIndex(config.currentIndex - 1);
-                });
-            }
-            if (uiElements.rightArrow) {
-                uiElements.rightArrow.addEventListener("click", () => {
-                    console.log("Clic sur la flèche droite");
-                    updateIndex(config.currentIndex + 1);
-                });
-            }
-
-            if (uiElements.hasDots) {
-                uiElements.dots.forEach((dot, index) => {
-                    dot.addEventListener("click", () => {
-                        console.log(`Clic sur le point ${index + 1}`);
-                        updateIndex(index);
-                    });
-                });
-            }
+            // Sélection des éléments du DOM
+            const banner = document.getElementById("banner");
+            bannerImg = document.querySelector(".banner-img");
+            dotsContainer = document.querySelector(".dots");
+            const arrowLeft = document.querySelector(".arrow_left");
+            const arrowRight = document.querySelector(".arrow_right");
+            
+            // Vérification des éléments critiques
+            if (!banner) throw new Error("Élément #banner manquant");
+            if (!bannerImg) throw new Error("Élément .banner-img manquant");
+            if (!dotsContainer) throw new Error("Élément .dots manquant");
+            if (!arrowLeft) throw new Error("Élément .arrow_left manquant");
+            if (!arrowRight) throw new Error("Élément .arrow_right manquant");
+            
+            // Configuration de l'interface
+            setupDOM(banner);
+            setupNavigation(arrowLeft, arrowRight);
+            updateCarousel();
+            
+            return true;
         } catch (error) {
-            console.error("Erreur lors de l'ajout des écouteurs d'événements :", error);
+            console.error(`Erreur d'initialisation du carrousel: ${error.message}`);
+            // On pourrait ajouter ici un élément d'UI pour informer l'utilisateur
+            return false;
         }
     }
-
-    function updateIndex(newIndex) {
-        config.currentIndex = (newIndex + config.slides.length) % config.slides.length;
-        updateDOM();
+    
+    // Configuration des éléments du DOM
+    function setupDOM(banner) {
+        // Création de la tagline
+        tagline = document.createElement("p");
+        banner.appendChild(tagline);
+        
+        // Création des indicateurs (dots)
+        dotsContainer.innerHTML = ''; // Nettoyage préventif
+        slides.forEach(() => {
+            const dot = document.createElement("span");
+            dot.className = "dot";
+            dot.setAttribute("aria-hidden", "true");
+            dotsContainer.appendChild(dot);
+        });
     }
-
-    function updateDOM() {
-        const currentSlide = config.slides[config.currentIndex];
-
-        uiElements.bannerImg.src = `${config.imagePath}${currentSlide.image}`;
-        uiElements.bannerImg.alt = `Slide ${config.currentIndex + 1}`;
-        uiElements.tagline.innerHTML = currentSlide.tagLine; // Utiliser innerHTML pour conserver les balises HTML
-
-        if (uiElements.hasDots) {
-            uiElements.dots.forEach((dot, index) => {
-                dot.classList.toggle("selected", index === config.currentIndex);
-                dot.setAttribute("aria-current", index === config.currentIndex ? "true" : "false");
-            });
+    
+    // Configuration de la navigation
+    function setupNavigation(arrowLeft, arrowRight) {
+        // Fonction de navigation avec boucle infinie grâce au modulo
+        function navigate(direction) {
+            currentIndex = (currentIndex + direction + slides.length) % slides.length;
+            updateCarousel();
         }
+        
+        // Gestionnaires d'événements pour les flèches
+        arrowLeft.addEventListener("click", () => {
+            console.log("Flèche de gauche cliquée");
+            navigate(-1);
+        });
+        arrowRight.addEventListener("click", () => {
+            console.log("Flèche de droite cliquée");
+            navigate(1);
+        });
+        
+        // Navigation au clavier
+        document.addEventListener("keydown", (event) => {
+            if(event.key === "ArrowLeft"){
+                console.log("Flèche de gauche cliquée");
+                navigate(-1)
+            }else if (event.key === "ArrowRight"){
+                console.log("Flèche de droite cliquée");
+                navigate(1);
+            }
+        });
     }
-
-    initUIElementsAndListeners();
-    updateDOM();
+    
+    // Mise à jour de l'affichage du carrousel
+    function updateCarousel() {
+        const slide = slides[currentIndex];
+        
+        // Mise à jour de l'image et du texte
+        bannerImg.src = `${imagePath}${slide.image}`;
+        tagline.innerHTML = slide.tagLine;
+        
+        // Mise à jour des indicateurs
+        Array.from(dotsContainer.children).forEach((dot, i) => {
+            dot.classList.toggle("selected", i === currentIndex);
+        });
+    }
+    
+    // Démarrage 
+    init();
 });
