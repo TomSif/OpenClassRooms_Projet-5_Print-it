@@ -139,10 +139,17 @@ header {
     cursor: pointer;
     pointer-events: auto; /* Permet aux boutons d'être cliquables */
     transition: transform 0.2s ease; 
+    transition: filter 0.25s ease-in-out; 
 }
 
 .arrow button:active {
     transform: scale(0.95); 
+}
+
+.arrow button:focus {
+    outline: none; /* Désactive l'outline par défaut */
+	transform: scale(1.05); 
+	filter: invert(50);
 }
 
 #banner .arrow_left,
@@ -331,4 +338,90 @@ footer div {
 	#contact > article {
 		flex: 2;
 	}
+}
+
+
+.modal {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 10PX 15px 25px rgba(0, 0, 0, 0.25);
+    padding: 0.5REM;
+    max-width: 650PX;
+    width: 90%;
+}
+
+
+.modal::backdrop {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+	padding: 25px;
+    padding-bottom: 10px;
+    position: relative;
+}
+
+.close-button {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #555;
+}
+
+.close-button:hover {
+    color: #000;
+}
+
+#modal-title {
+    TEXT-ALIGN: center;
+    margin-top: 0;
+    color: #333;
+	margin-bottom: 1.5rem;
+}
+
+#modal-body {
+    margin-top: 15px;
+}
+
+
+#modal-body p {
+	font-family: 'roboto', sans-serif;
+}	
+
+
+.modal-image{
+	margin: 0;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    font-size: 100%;
+    vertical-align: baseline;
+    margin-bottom: 0.75rem;
+    border-radius: 6px;
+}
+
+.modal-image img{
+	border-radius: 6px;
+}
+
+
+.info-button {
+    background: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
